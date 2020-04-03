@@ -1,6 +1,5 @@
 import UIKit
 import PlaygroundSupport
-
 public enum ScreenType {
     case iphone11ProMax
     case iphone11Pro
@@ -13,7 +12,6 @@ public enum ScreenType {
     case ipadPro12_9
     case mac
     case other(width: Int, height: Int)
-    
     public func size(isPortrait: Bool = true) -> CGSize {
         var size: CGSize
         switch self {
@@ -46,9 +44,7 @@ public enum ScreenType {
         return size
     }
 }
-
 extension UIViewController {
-    
     public convenience init(screenType: ScreenType, isPortrait: Bool = true) {
         self.init(nibName: nil, bundle: nil)
         let size = screenType.size(isPortrait: isPortrait)
@@ -56,22 +52,20 @@ extension UIViewController {
         view.clipsToBounds = true
         preferredContentSize = size
     }
-    
-    public func scale(to scale: Float) -> UIWindow {
+    public func scale(to scale: Float) -> UIView {
         if let self = self as? UINavigationController {
             guard let contentSize = self.topViewController?.view.frame.size else {
                 print("Erro: Seu Navigation Controller não possui um View Controller")
-                return UIWindow()
+                return UIView()
             }
             self.view.frame.size = contentSize == .zero ? view.frame.size : contentSize
         }
         self.view.transform = CGAffineTransform(scaleX: CGFloat(scale), y: CGFloat(scale))
         self.preferredContentSize = self.view.frame.size
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 770, height: 956))
-        window.backgroundColor = .black
-        window.addSubview(self.view)
-        self.view.center = window.center
-        window.makeKeyAndVisible()
-        return window
+        let rootView = UIView(frame: CGRect(x: 0, y: 0, width: 770, height: 956))
+        rootView.backgroundColor = .black
+        rootView.addSubview(self.view)
+        self.view.center = rootView.center
+        return rootView
     }
 }

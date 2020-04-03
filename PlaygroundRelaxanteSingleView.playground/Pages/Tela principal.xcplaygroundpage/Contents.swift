@@ -5,6 +5,8 @@ import PlaygroundSupport
 
 class FirstViewController : UIViewController, UITextFieldDelegate {
     
+    let botaoPararIniciarMusica = UIButton()
+    
     let textFieldSeuNome = UITextField()
     var nomeUsuario = ""
     
@@ -30,7 +32,6 @@ class FirstViewController : UIViewController, UITextFieldDelegate {
         botaoMudarTema.setBackgroundImage(imagemBotaoMudarTema, for: .normal)
         
         // Botão parar música
-        let botaoPararIniciarMusica = UIButton()
         botaoPararIniciarMusica.frame = CGRect(x: 1260, y: 57, width: 164, height: 35)
         let imagemBotaoMusica = #imageLiteral(resourceName: "Parar música.png")
         botaoPararIniciarMusica.setBackgroundImage(imagemBotaoMusica, for: .normal)
@@ -54,11 +55,10 @@ class FirstViewController : UIViewController, UITextFieldDelegate {
         textFieldSeuNome.delegate = self
         textFieldSeuNome.addTarget(self, action: #selector(recebeNome), for: .editingChanged)
         
-        // Botão auxiliar
-        let botaoAuxiliar = UIButton(frame: CGRect(x: 395, y: 801, width: 651, height: 106))
-        botaoAuxiliar.backgroundColor = .black
-        botaoAuxiliar.setTitle("Próxima página", for: .normal)
-        botaoAuxiliar.addTarget(nil, action: #selector(clicouBotaoAuxiliar), for: .touchUpInside)
+        // Botão caixa de texto
+        let botaoCaixaTexto = UIButton(frame: CGRect(x: 394, y: 221, width: 651, height: 458))
+        botaoCaixaTexto.backgroundColor = UIColor.transparente()
+        botaoCaixaTexto.addTarget(nil, action: #selector(clicouCaixaTexto), for: .touchUpInside)
         
         // Adiciona Subviews
         view.addSubview(backgroundView)
@@ -67,16 +67,17 @@ class FirstViewController : UIViewController, UITextFieldDelegate {
         view.addSubview(textViewConversa)
         view.addSubview(botaoMudarTema)
         view.addSubview(botaoPararIniciarMusica)
-        view.addSubview(botaoAuxiliar)
+        view.addSubview(botaoCaixaTexto)
         self.view = view
         
     }
     
     // Funções
-    @objc func clicouBotaoAuxiliar() {
+    @objc func clicouCaixaTexto() {
         print("Clicou na caixa de texto")
         //show(secondViewController, sender: nil)
-        present(secondViewController, animated: true, completion: nil)
+        //present(secondViewController, animated: true, completion: nil)
+        navigationController?.pushViewController(secondViewController, animated: true)
     }
     
     @objc func recebeNome() {
@@ -137,6 +138,11 @@ extension UIColor {
 // Present the view controller in the Live View window
 let firstViewController = FirstViewController(screenType: .mac, isPortrait: true)
 let secondViewController = SecondViewController(screenType: .mac, isPortrait: true)
+
+let navigation = UINavigationController(screenType: .mac, isPortrait: true)
+navigation.navigationBar.isHidden = true
+navigation.pushViewController(firstViewController, animated: true)
+
 PlaygroundPage.current.liveView = firstViewController.scale(to: 0.5)
 
 //: # Navegação
