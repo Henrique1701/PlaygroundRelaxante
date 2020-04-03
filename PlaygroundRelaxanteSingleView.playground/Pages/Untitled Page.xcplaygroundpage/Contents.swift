@@ -4,6 +4,11 @@ import UIKit
 import PlaygroundSupport
 
 class FirstViewController : UIViewController, UITextFieldDelegate {
+    
+    let textFieldSeuNome = UITextField()
+    var nomeUsuario = ""
+    
+    
     override func loadView() {
         let view = UIView()
         view.backgroundColor = .systemTeal
@@ -41,18 +46,19 @@ class FirstViewController : UIViewController, UITextFieldDelegate {
         textViewConversa.textAlignment = .center
         
         // Text field seu nome
-        let textFieldSeuNome = UITextField()
         textFieldSeuNome.frame = CGRect(x: 394, y: 701, width: 651, height: 106)
         textFieldSeuNome.background = #imageLiteral(resourceName: "ImagemTextField.png")
         textFieldSeuNome.placeholder = "Seu nome"
-        //textFieldSeuNome.text = "Seu nome"
         textFieldSeuNome.textAlignment = .center
         //textFieldSeuNome.addTarget(nil, action: #selector(clicouTextField), for: .touchUpInside)
         textFieldSeuNome.delegate = self
+        textFieldSeuNome.addTarget(self, action: #selector(recebeNome), for: .editingChanged)
         
-        func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-            textField.endEditing(true)
-        }
+        // Botão auxiliar
+        let botaoAuxiliar = UIButton(frame: CGRect(x: 395, y: 801, width: 651, height: 106))
+        botaoAuxiliar.backgroundColor = .black
+        botaoAuxiliar.setTitle("Próxima página", for: .normal)
+        botaoAuxiliar.addTarget(nil, action: #selector(clicouBotaoAuxiliar), for: .touchUpInside)
         
         // Adiciona Subviews
         view.addSubview(backgroundView)
@@ -61,30 +67,25 @@ class FirstViewController : UIViewController, UITextFieldDelegate {
         view.addSubview(textViewConversa)
         view.addSubview(botaoMudarTema)
         view.addSubview(botaoPararIniciarMusica)
+        view.addSubview(botaoAuxiliar)
         self.view = view
         
     }
     
     // Funções
-    @objc func clicouTextField() {
-        print("Clicou no text field")
-        show(secondViewControler, sender: nil)
+    @objc func clicouBotaoAuxiliar() {
+        print("Clicou na caixa de texto")
+        //show(secondViewController, sender: nil)
+        present(secondViewController, animated: true, completion: nil)
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        // Do stuff here
-        return true
+    @objc func recebeNome() {
+        self.nomeUsuario = textFieldSeuNome.text!
     }
     
 }
 
-extension UIColor {
-    class func transparente() -> UIColor {
-        return UIColor(white: 1.0, alpha: 0)
-    }
-}
-
-class SecondViewControler: UIViewController {
+class SecondViewController: UIViewController {
     
     override func loadView() {
         let view = UIView()
@@ -112,20 +113,31 @@ class SecondViewControler: UIViewController {
         let caixaTextoView = UIImageView(image: imagemCaixaTexto)
         caixaTextoView.frame = CGRect(x: 394, y: 221, width: 651, height: 458)
         
-        let labelConversa = UILabel()
-        labelConversa.frame = CGRect(x: 545, y: 375, width: 350, height: 179)
-        labelConversa.text = "Então, 'Seu nome', não sei o que está causando a sua ansiedade"
-        labelConversa.textColor = .black
-        labelConversa.textAlignment = .center
+        let textViewConversa = UITextView(frame: CGRect(x: 545, y: 375, width: 350, height: 179))
+        textViewConversa.backgroundColor = UIColor.transparente()
+        textViewConversa.text = "Então, 'Seu nome', não sei o que está causando a sua ansiedade."
+        textViewConversa.textAlignment = .center
         
         // Adiciona Subviews
+        view.addSubview(backgroundView)
+        view.addSubview(botaoMudarTema)
+        view.addSubview(botaoPararIniciarMusica)
+        view.addSubview(caixaTextoView)
+        view.addSubview(textViewConversa)
         self.view = view
     }
 }
+
+extension UIColor {
+    class func transparente() -> UIColor {
+        return UIColor(white: 1.0, alpha: 0)
+    }
+}
+
 // Present the view controller in the Live View window
-let firstViewControler = FirstViewController(screenType: .mac, isPortrait: true)
-let secondViewControler = SecondViewControler(screenType: .mac, isPortrait: true)
-PlaygroundPage.current.liveView = firstViewControler.scale(to: 0.5)
+let firstViewController = FirstViewController(screenType: .mac, isPortrait: true)
+let secondViewController = SecondViewController(screenType: .mac, isPortrait: true)
+PlaygroundPage.current.liveView = firstViewController.scale(to: 0.5)
 
 //: # Navegação
 
