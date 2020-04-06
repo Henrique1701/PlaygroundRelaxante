@@ -172,6 +172,7 @@ class SegundaViewController: UIViewController {
         botaoPararIniciarMusica.frame = CGRect(x: 1260, y: 57, width: 164, height: 35)
         let imagemBotaoMusica = #imageLiteral(resourceName: "Parar música.png")
         botaoPararIniciarMusica.setBackgroundImage(imagemBotaoMusica, for: .normal)
+        botaoPararIniciarMusica.addTarget(self, action: #selector(pararIniciarMusica), for: .touchUpInside)
         
         // Caixa de texto, com label
         let imagemCaixaTexto = #imageLiteral(resourceName: "CaixaDeTexto.png")
@@ -198,8 +199,22 @@ class SegundaViewController: UIViewController {
         self.view = view
     }
     
+    // Funções
     @objc func clicouCaixaTexto() {
         navigationController?.pushViewController(terceiraViewController, animated: true)
+    }
+    
+    @objc func pararIniciarMusica() {
+        if chompPlayer?.isPlaying == true {
+            chompPlayer?.pause()
+            let imagemIniciarMusica = #imageLiteral(resourceName: "Inicar música.png")
+            botaoPararIniciarMusica.setBackgroundImage(imagemIniciarMusica, for: .normal)
+        } else {
+            chompPlayer?.play()
+            let imagemPararMusica = #imageLiteral(resourceName: "Parar música.png")
+            botaoPararIniciarMusica.setBackgroundImage(imagemPararMusica, for: .normal)
+        }
+        
     }
 }
 
@@ -226,6 +241,7 @@ class TerceiraViewController: UIViewController {
         botaoPararIniciarMusica.frame = CGRect(x: 1260, y: 57, width: 164, height: 35)
         let imagemBotaoMusica = #imageLiteral(resourceName: "Parar música.png")
         botaoPararIniciarMusica.setBackgroundImage(imagemBotaoMusica, for: .normal)
+        botaoPararIniciarMusica.addTarget(self, action: #selector(pararIniciarMusica), for: .touchUpInside)
         
         // Caixa de texto, com label
         let imagemCaixaTexto = #imageLiteral(resourceName: "CaixaDeTexto.png")
@@ -252,8 +268,22 @@ class TerceiraViewController: UIViewController {
         self.view = view
     }
     
+    // Funções
     @objc func clicouCaixaTexto() {
         navigationController?.pushViewController(quartaViewController, animated: true)
+    }
+    
+    @objc func pararIniciarMusica() {
+        if chompPlayer?.isPlaying == true {
+            chompPlayer?.pause()
+            let imagemIniciarMusica = #imageLiteral(resourceName: "Inicar música.png")
+            botaoPararIniciarMusica.setBackgroundImage(imagemIniciarMusica, for: .normal)
+        } else {
+            chompPlayer?.play()
+            let imagemPararMusica = #imageLiteral(resourceName: "Parar música.png")
+            botaoPararIniciarMusica.setBackgroundImage(imagemPararMusica, for: .normal)
+        }
+        
     }
 }
 
@@ -306,7 +336,21 @@ class QuartaViewController: UIViewController {
         self.view = view
     }
     
+    // Funções
     @objc func clicouCaixaTexto() {
+        
+    }
+    
+    @objc func pararIniciarMusica() {
+        if chompPlayer?.isPlaying == true {
+            chompPlayer?.pause()
+            let imagemIniciarMusica = #imageLiteral(resourceName: "Inicar música.png")
+            botaoPararIniciarMusica.setBackgroundImage(imagemIniciarMusica, for: .normal)
+        } else {
+            chompPlayer?.play()
+            let imagemPararMusica = #imageLiteral(resourceName: "Parar música.png")
+            botaoPararIniciarMusica.setBackgroundImage(imagemPararMusica, for: .normal)
+        }
         
     }
 }
