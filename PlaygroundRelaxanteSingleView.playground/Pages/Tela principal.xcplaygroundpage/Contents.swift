@@ -75,20 +75,14 @@ class PrimeiraViewController : UIViewController, UITextFieldDelegate, UIGestureR
         
         // Text field seu nome
         textFieldSeuNome.frame = CGRect(x: 394, y: 701, width: 651, height: 106)
+        textFieldSeuNome.delegate = self
         textFieldSeuNome.background = #imageLiteral(resourceName: "ImagemTextField.png")
         textFieldSeuNome.placeholder = "Seu nome"
         textFieldSeuNome.font = dancingScript?.withSize(40)
         textFieldSeuNome.textAlignment = .center
-        //textFieldSeuNome.addTarget(nil, action: #selector(clicouTextField), for: .touchUpInside)
-        textFieldSeuNome.delegate = self
-        textFieldSeuNome.addTarget(self, action: #selector(recebeNome), for: .editingChanged)
-        
-        // Botão caixa de texto
-//        let botaoCaixaTexto = UIButton(frame: CGRect(x: 394, y: 221, width: 651, height: 458))
-//        botaoCaixaTexto.backgroundColor = UIColor.transparente()
-//        botaoCaixaTexto.addTarget(nil, action: #selector(clicouCaixaTexto), for: .touchUpInside)
         
         // Testando movimento de itens
+        /*
         let animal = UIImage(named: "animal.jpeg")
         let animalView = UIImageView(image: animal)
         animalView.frame = CGRect(x: 50, y: 50, width: 200, height: 200)
@@ -96,6 +90,7 @@ class PrimeiraViewController : UIViewController, UITextFieldDelegate, UIGestureR
         animalView.isUserInteractionEnabled = true
         let panAnimal = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         animalView.addGestureRecognizer(panAnimal)
+         */
         
         
         // Adiciona Subviews
@@ -105,27 +100,14 @@ class PrimeiraViewController : UIViewController, UITextFieldDelegate, UIGestureR
         view.addSubview(textViewConversa)
         view.addSubview(botaoMudarTema)
         view.addSubview(botaoPararIniciarMusica)
-        //view.addSubview(botaoCaixaTexto)
-        view.addSubview(animalView)
+        //view.addSubview(animalView)
         
         self.view = view
         
     }
     
     override func viewDidLoad() {
-        // Imagem de fundo (tema)
-        let backgroundView = UIImageView(image: backgroundImagem)
-        backgroundView.frame = CGRect(x: 0, y: 0, width: 1440, height: 900)
-        
-        backgroundView.image = backgroundImagem
-        
-/*
-        for name in UIFont.familyNames {
-           print(name)
-           //fontNames.append(UIFont.fontNames(forFamilyName: name) as [AnyObject])
-        }
- */
-
+        // Imprimir todas as fontes
         for family in UIFont.familyNames {
             print("\(family)")
             for name in UIFont.fontNames(forFamilyName: family) {
@@ -142,20 +124,13 @@ class PrimeiraViewController : UIViewController, UITextFieldDelegate, UIGestureR
         navigationController?.pushViewController(segundaViewController, animated: true)
     }
     
-    @objc func recebeNome() {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         nomeUsuario = textFieldSeuNome.text!
     }
     
-    @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: view)
-        guard let gestureView = gesture.view else {
-            return
-        }
-        gestureView.center = CGPoint(
-            x: gestureView.center.x + translation.x,
-            y: gestureView.center.y + translation.y
-        )
-        gesture.setTranslation(.zero, in: view)
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textFieldSeuNome.resignFirstResponder()
+        return true;
     }
     
     @objc func pararIniciarMusica() {
@@ -173,10 +148,21 @@ class PrimeiraViewController : UIViewController, UITextFieldDelegate, UIGestureR
     
     @objc func mudarTema() {
         navigationController?.pushViewController(temasViewController, animated: true)
-
-        //backgroundView.image = backgroundImagem
     }
     
+    /*
+    @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
+        let translation = gesture.translation(in: view)
+        guard let gestureView = gesture.view else {
+            return
+        }
+        gestureView.center = CGPoint(
+            x: gestureView.center.x + translation.x,
+            y: gestureView.center.y + translation.y
+        )
+        gesture.setTranslation(.zero, in: view)
+    }
+    */
 }
 
 class SegundaViewController: UIViewController {
