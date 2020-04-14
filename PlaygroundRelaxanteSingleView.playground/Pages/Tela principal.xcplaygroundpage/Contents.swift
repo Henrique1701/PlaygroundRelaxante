@@ -47,18 +47,18 @@ class PrimeiraViewController : UIViewController, UITextFieldDelegate, UIGestureR
         // Botão mudar tema
         let botaoMudarTema = UIButton()
         botaoMudarTema.frame = CGRect(x: 1260, y: 13, width: 164, height: 35)
-        let imagemBotaoMudarTema = #imageLiteral(resourceName: "Mudar tema.png")
+        let imagemBotaoMudarTema = UIImage(named: "Mudar tema.png")
         botaoMudarTema.setBackgroundImage(imagemBotaoMudarTema, for: .normal)
         botaoMudarTema.addTarget(self, action: #selector(mudarTema), for: .touchUpInside)
         
         // Botão parar música
         botaoPararIniciarMusica.frame = CGRect(x: 1260, y: 57, width: 164, height: 35)
-        let imagemBotaoMusica = #imageLiteral(resourceName: "Parar música.png")
+        let imagemBotaoMusica = UIImage(named: "Parar música-2.png")
         botaoPararIniciarMusica.setBackgroundImage(imagemBotaoMusica, for: .normal)
         botaoPararIniciarMusica.addTarget(self, action: #selector(pararIniciarMusica), for: .touchUpInside)
         
         // Caixa de texto, com label
-        let imagemCaixaTexto = #imageLiteral(resourceName: "CaixaDeTexto.png")
+        let imagemCaixaTexto = UIImage(named: "Caixa de texto.png")
         let caixaTextoView = UIImageView(image: imagemCaixaTexto)
         caixaTextoView.frame = CGRect(x: 394, y: 221, width: 651, height: 458)
         
@@ -74,9 +74,9 @@ class PrimeiraViewController : UIViewController, UITextFieldDelegate, UIGestureR
         
         
         // Text field seu nome
-        textFieldSeuNome.frame = CGRect(x: 394, y: 701, width: 651, height: 106)
+        textFieldSeuNome.frame = CGRect(x: 394, y: 738, width: 651, height: 78)
         textFieldSeuNome.delegate = self
-        textFieldSeuNome.background = #imageLiteral(resourceName: "ImagemTextField.png")
+        textFieldSeuNome.background = UIImage(named: "Text field.png")
         textFieldSeuNome.placeholder = "Seu nome"
         textFieldSeuNome.font = dancingScript?.withSize(40)
         textFieldSeuNome.textAlignment = .center
@@ -121,7 +121,7 @@ class PrimeiraViewController : UIViewController, UITextFieldDelegate, UIGestureR
         print("Clicou na caixa de texto")
         //show(secondViewController, sender: nil)
         //present(secondViewController, animated: true, completion: nil)
-        navigationController?.pushViewController(segundaViewController, animated: true)
+        //navigationController?.pushViewController(segundaViewController, animated: true)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -165,6 +165,7 @@ class PrimeiraViewController : UIViewController, UITextFieldDelegate, UIGestureR
     */
 }
 
+/*
 class SegundaViewController: UIViewController {
     
     let botaoPararIniciarMusica = UIButton()
@@ -392,6 +393,7 @@ class QuartaViewController: UIViewController {
         }
     }
 }
+ */
 
 class TemasViewController: UIViewController {
     
@@ -566,9 +568,11 @@ extension UIColor {
 
 // Present the view controller in the Live View window
 let primeiraViewController = PrimeiraViewController(screenType: .mac, isPortrait: true)
+/*
 let segundaViewController = SegundaViewController(screenType: .mac, isPortrait: true)
 let terceiraViewController = TerceiraViewController(screenType: .mac, isPortrait: true)
 let quartaViewController = QuartaViewController(screenType: .mac, isPortrait: true)
+ */
 let temasViewController = TemasViewController(screenType: .mac, isPortrait: true)
 
 let navigation = UINavigationController(screenType: .mac, isPortrait: true)
