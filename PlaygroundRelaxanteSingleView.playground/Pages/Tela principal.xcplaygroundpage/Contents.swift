@@ -28,7 +28,11 @@ let dancingScript30 = UIFont(name: "Dancing Script", size: 30)
 //let textFieldSeuNome = UITextField()
 var nomeUsuario = ""
 
-//: ## View controller
+//: ## Variáveis de controle
+
+var controleVideo = 0
+// Controlar reprodução da música de fundo
+var estadoMusica = chompPlayer?.isPlaying
 
 //: ### PrimeiraViewController
 
@@ -333,11 +337,11 @@ class QuartaViewController: UIViewController, UIGestureRecognizerDelegate {
     let botaoMudarTema = UIButton()
     let botaoPararIniciarMusica = UIButton()
     let caixaTextoView = UIImageView()
-    let texto = UILabel(frame: CGRect(x: 545, y: 308, width: 350, height: 98))
+    let texto = UILabel(frame: CGRect(x: 545, y: 308, width: 350, height: 108))
     let backgroundView = UIImageView(frame: CGRect(x: 0, y: 0, width: 1440, height: 900))
     let botaoControleRespiracao = UIButton(frame: CGRect(x: 564, y: 450, width: 325, height: 39))
-    let botaoMeditar = UIButton(frame: CGRect(x: 570, y: 515, width: 325, height: 40))
-    let botaoMindfulness = UIButton(frame: CGRect(x: 570, y: 581, width: 325, height: 39))
+    let botaoMindfulness = UIButton(frame: CGRect(x: 570, y: 515, width: 325, height: 40))
+    let botaoMeditar = UIButton(frame: CGRect(x: 570, y: 581, width: 325, height: 39))
     
     override func loadView() {
         let view = UIView()
@@ -381,17 +385,17 @@ class QuartaViewController: UIViewController, UIGestureRecognizerDelegate {
         texto.text = "O que você gostaria de fazer ?"
         
         // Botão controlar a respiração
-        botaoControleRespiracao.setBackgroundImage(UIImage(named: "Botao controlar a respiracao.png"), for: .normal)
+        botaoControleRespiracao.setBackgroundImage(UIImage(named: "Botao controlar a respiracao-2.png"), for: .normal)
         botaoControleRespiracao.tag = 1
         botaoControleRespiracao.addTarget(self, action: #selector(QuartaViewController.escolherAtividade(sender:)), for: .touchUpInside)
         
         // Botão meditar
-        botaoMeditar.setBackgroundImage(UIImage(named: "Botao meditar.png"), for: .normal)
+        botaoMeditar.setBackgroundImage(UIImage(named: "Botao meditar-2.png"), for: .normal)
         botaoMeditar.tag = 2
         botaoMeditar.addTarget(self, action: #selector(QuartaViewController.escolherAtividade(sender:)), for: .touchUpInside)
         
         // Botão mindfulness
-        botaoMindfulness.setBackgroundImage(UIImage(named: "Botao mindfulness.png"), for: .normal)
+        botaoMindfulness.setBackgroundImage(UIImage(named: "Botao mindfulness-2.png"), for: .normal)
         botaoMindfulness.tag = 3
         botaoMindfulness.addTarget(self, action: #selector(QuartaViewController.escolherAtividade(sender:)), for: .touchUpInside)
         
@@ -434,16 +438,91 @@ class QuartaViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @objc func escolherAtividade(sender: UIButton) {
         let sender = sender.tag
+        estadoMusica = chompPlayer?.isPlaying
         
         if sender == 1 {
             print("Escolheu controlar a respiração")
+            controleVideo = 1
         } else if sender == 2 {
             print("Escolheu meditar")
+            controleVideo = 2
         } else {
             print("Escolheu mindfulness")
+            controleVideo = 3
         }
+        navigationController?.pushViewController(quintaViewController, animated: true)
     }
 }
+
+//: ### QuintaViewController
+
+class QuintaViewController: UIViewController, UIGestureRecognizerDelegate, WKUIDelegate {
+    
+    let backgroundView = UIImageView(frame: CGRect(x: 0, y: 0, width: 1440, height: 900))
+    let botaoVoltar = UIButton(frame: CGRect(x: 13, y: 13, width: 164, height: 36))
+    let urlVideo1 = URL(string: "https://www.youtube.com/embed/cizpXqVzBjw")!
+    let urlVideo2 = URL(string: "https://www.youtube.com/embed/hn3J-d44r94")!
+    let urlVideo3 = URL(string: "https://www.youtube.com/embed/xpYMV0Uqc-M")!
+    //var webView = WKWebView()
+    
+    override func loadView() {
+        let view = UIView()
+        view.backgroundColor = .red
+        
+        self.view = view
+    }
+    
+    override func viewDidLoad() {
+        // Imagem de fundo (tema)
+        backgroundView.image = backgroundImagem
+        
+        // Botão voltar
+        botaoVoltar.setBackgroundImage(UIImage(named: "Voltar-2"), for: .normal)
+        botaoVoltar.addTarget(self, action: #selector(QuintaViewController.tocouBotaoVoltar), for: .touchUpInside)
+        
+        // Adiciona Subviews
+        view.addSubview(backgroundView)
+        view.addSubview(botaoVoltar)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // Gambiarra para resolver bug do Xcode (perte a referencia do backgroundView)
+        backgroundView.image = backgroundImagem
+        view.addSubview(self.backgroundView)
+        view.sendSubviewToBack(self.backgroundView)
+        
+        chompPlayer?.pause()
+        
+        // Videos
+        var request = URLRequest(url: urlVideo1)
+        if controleVideo == 2 {
+            request = URLRequest(url: urlVideo2)
+        } else if controleVideo == 3 {
+            request = URLRequest(url: urlVideo3)
+        }
+        
+        let webConfiguration = WKWebViewConfiguration()
+        webConfiguration.ignoresViewportScaleLimits = true
+        
+        let webView = WKWebView(frame: CGRect(x: 227, y: 174, width: 983, height: 552), configuration: webConfiguration)
+        webView.uiDelegate = self
+        webView.load(request)
+        
+        view.addSubview(webView)
+    }
+    
+    // Funções
+    @objc func tocouBotaoVoltar() {
+        print("Clicou no botão para voltar")
+        //webView.endEditing(true)
+        if estadoMusica == true {
+            chompPlayer?.play()
+        }
+        navigationController?.popViewController(animated: true)
+    }
+}
+
+
 //: ### TemasViewController
 
 class TemasViewController: UIViewController {
@@ -597,49 +676,24 @@ class TemasViewController: UIViewController {
 }
 
 
-class TesteWebView: UIViewController, WKUIDelegate {
-    override func loadView() {
-        let view = UIView()
-        view.backgroundColor = .systemTeal
-        
-        self.view = view
-    }
-    
-    override func viewDidLoad() {
-        //let urlVideo1 = URL(string: "https://www.youtube.com/embed/mTJ56qy2Flg")!
-        //let urlVideo2 = URL(string: "https://www.youtube.com/embed/mzAqzL2XIQA")!
-        let urlVideo3 = URL(string: "https://www.youtube.com/embed/xpYMV0Uqc-M")!
-        
-        
-        let request = URLRequest(url: urlVideo3)
-        
-        let webConfiguration = WKWebViewConfiguration()
-        webConfiguration.ignoresViewportScaleLimits = true
-        
-        let webView = WKWebView(frame: CGRect(x: 227, y: 174, width: 983, height: 552), configuration: webConfiguration)
-        webView.uiDelegate = self
-        webView.load(request)
-        
-        view.addSubview(webView)
-    }
-}
-
 extension UIColor {
     class func transparente() -> UIColor {
         return UIColor(white: 1.0, alpha: 0)
     }
 }
 
+//: ## Navegação
+
 // Present the view controller in the Live View window
 let primeiraViewController = PrimeiraViewController(screenType: .mac, isPortrait: true)
 let segundaViewController = SegundaViewController(screenType: .mac, isPortrait: true)
 let terceiraViewController = TerceiraViewController(screenType: .mac, isPortrait: true)
 let quartaViewController = QuartaViewController(screenType: .mac, isPortrait: true)
+let quintaViewController = QuintaViewController(screenType: .mac, isPortrait: true)
 let temasViewController = TemasViewController(screenType: .mac, isPortrait: true)
-let testeWebView = TesteWebView(screenType: .mac, isPortrait: true)
 
 let navigation = UINavigationController(screenType: .mac, isPortrait: true)
 navigation.navigationBar.isHidden = true
-navigation.pushViewController(quartaViewController, animated: true)
+navigation.pushViewController(primeiraViewController, animated: true)
 
 PlaygroundPage.current.liveView = navigation.scale(to: 0.5)
