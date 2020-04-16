@@ -7,15 +7,13 @@ import WebKit
 //: ## Tema
 // Background tema
 var backgroundImagem = UIImage(named: "tema01.png")
-//let backgroundView = UIImageView(image: backgroundImagem)
-//backgroundView.frame = CGRect(x: 0, y: 0, width: 1440, height: 900)
 
 // Música tema
-private var chompPlayer: AVAudioPlayer?
+public var chompPlayer: AVAudioPlayer?
 let player = Player()
 chompPlayer = player.createPlayer(from: "som tema floresta")
 chompPlayer?.numberOfLoops = 10
-chompPlayer?.play()
+//chompPlayer?.play()
 
 
 // Controle música tema
@@ -27,10 +25,14 @@ let dancingScript = UIFont(name: "Dancing Script", size: 45)
 let dancingScript60 = UIFont(name: "Dancing Script", size: 60)
 let dancingScript30 = UIFont(name: "Dancing Script", size: 30)
 //: ## Entrada text fild
-let textFieldSeuNome = UITextField()
+//let textFieldSeuNome = UITextField()
 var nomeUsuario = ""
+
 //: ## View controller
-class TelaInicialViewController : UIViewController, UIGestureRecognizerDelegate {
+
+//: ### PrimeiraViewController
+
+class PrimeiraViewController : UIViewController, UIGestureRecognizerDelegate {
     
     let componentes = Componentes()
     let backgroundView = UIImageView(frame: CGRect(x: 0, y: 0, width: 1440, height: 900))
@@ -58,7 +60,7 @@ class TelaInicialViewController : UIViewController, UIGestureRecognizerDelegate 
         
         // Texto
         let textoBoasVindas = UILabel(frame: CGRect(x: 485, y: 378, width: 469, height: 144))
-        textoBoasVindas.font = dancingScript60
+        textoBoasVindas.font = dancingScript
         textoBoasVindas.textAlignment = .center
         textoBoasVindas.lineBreakMode = .byWordWrapping
         textoBoasVindas.numberOfLines = 2
@@ -69,6 +71,10 @@ class TelaInicialViewController : UIViewController, UIGestureRecognizerDelegate 
         textoContinuar.textColor = .darkGray
         textoContinuar.textAlignment = .right
         textoContinuar.text = "Clique para continuar"
+        
+        let textoMotivacao1 = UILabel(frame: CGRect(x: 476, y: 356, width: 488, height: 189))
+        textoMotivacao1.font = dancingScript
+        textoMotivacao1.textAlignment = .center
         
         // Adiciona Subviews
         view.addSubview(backgroundView)
@@ -81,18 +87,17 @@ class TelaInicialViewController : UIViewController, UIGestureRecognizerDelegate 
         self.view = view
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        print(backgroundView.superview?.backgroundColor == .red)
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         backgroundView.image = backgroundImagem
+        
+        // Verifica imagem do botão iniciar/parar música
+        self.componentes.verificaImagemBotaoMusica(isPlaying: chompPlayer?.isPlaying ?? true)
     }
     
     // Funções
     @objc func clicouCaixaTexto() {
         print("Clicou na caixa de texto")
-        navigationController?.pushViewController(primeiraViewController, animated: true)
+        navigationController?.pushViewController(segundaViewController, animated: true)
     }
     
     @objc func pararIniciarMusica() {
@@ -113,29 +118,48 @@ class TelaInicialViewController : UIViewController, UIGestureRecognizerDelegate 
     }
 }
 
-class PrimeiraViewController : UIViewController, UITextFieldDelegate, UIGestureRecognizerDelegate {
+//: ### SegundaViewController
+
+class SegundaViewController : UIViewController, UITextFieldDelegate, UIGestureRecognizerDelegate {
     
-    let componentes = Componentes()
+    let botaoMudarTema = UIButton()
+    let botaoPararIniciarMusica = UIButton()
+    let caixaTextoView = UIImageView()
+    let textFieldSeuNome = UITextField()
     let backgroundView = UIImageView(frame: CGRect(x: 0, y: 0, width: 1440, height: 900))
     
     override func loadView() {
         let view = UIView()
         view.backgroundColor = .red
         
+        self.view = view
+    }
+    
+    override func viewDidLoad() {
         // Imagem de fundo (tema)
         backgroundView.image = backgroundImagem
         
         // Botão mudar tema
-        let botaoMudarTema = componentes.botaoMudarTema
+        botaoMudarTema.frame = CGRect(x: 1263, y: 13, width: 164, height: 35)
+        let imagemBotaoMudarTema = UIImage(named: "Mudar tema-2.png")
+        botaoMudarTema.setBackgroundImage(imagemBotaoMudarTema, for: .normal)
         botaoMudarTema.addTarget(self, action: #selector(mudarTema), for: .touchUpInside)
         
         // Botão parar música
-        let botaoPararIniciarMusica = componentes.botaoPararIniciarMusica
-        componentes.verificaImagemBotaoMusica(isPlaying: chompPlayer?.isPlaying ?? true)
+        botaoPararIniciarMusica.frame = CGRect(x: 1263, y: 56, width: 164, height: 35)
+        let imagemBotaoMusica = UIImage(named: "Parar música-2.png")
+        botaoPararIniciarMusica.setBackgroundImage(imagemBotaoMusica, for: .normal)
+        if chompPlayer?.isPlaying == true {
+            botaoPararIniciarMusica.setBackgroundImage(UIImage(named: "Parar música-2.png"), for: .normal)
+        } else {
+            botaoPararIniciarMusica.setBackgroundImage(UIImage(named: "Iniciar música-2.png"), for: .normal)
+        }
         botaoPararIniciarMusica.addTarget(self, action: #selector(pararIniciarMusica), for: .touchUpInside)
         
         // Caixa de texto, com label
-        let caixaTextoView = componentes.caixaTextoView
+        let imagemCaixaTexto = UIImage(named: "Caixa de texto-2.png")
+        caixaTextoView.image = imagemCaixaTexto
+        caixaTextoView.frame = CGRect(x: 394, y: 221, width: 651, height: 458)
         caixaTextoView.isUserInteractionEnabled = true
         let tocouCaixaTexto = UITapGestureRecognizer(target: self, action: #selector(clicouCaixaTexto))
         caixaTextoView.addGestureRecognizer(tocouCaixaTexto)
@@ -156,39 +180,28 @@ class PrimeiraViewController : UIViewController, UITextFieldDelegate, UIGestureR
         textFieldSeuNome.textAlignment = .center
         
         // Adiciona Subviews
+        view.addSubview(backgroundView)
         view.addSubview(textFieldSeuNome)
         view.addSubview(caixaTextoView)
         view.addSubview(textoConversa)
         view.addSubview(botaoMudarTema)
         view.addSubview(botaoPararIniciarMusica)
         //view.addSubview(animalView)
-        
-        self.view = view
-        
-    }
-    
-    override func viewDidLoad() {
-        // Imprimir todas as fontes
-        view.addSubview(backgroundView)
-//        for family in UIFont.familyNames {
-//            print("\(family)")
-//            for name in UIFont.fontNames(forFamilyName: family) {
-//                print("   \(name)")
-//            }
-//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print(self.backgroundView.superview)
-        self.backgroundView.image = backgroundImagem
+        // Gambiarra para resolver bug do Xcode (perte a referencia do backgroundView)
+        
+        backgroundView.image = backgroundImagem
+        view.addSubview(self.backgroundView)
+        view.sendSubviewToBack(self.backgroundView)
+        
+        // Verifica botão iniciar/parar música
+        //self.componentes.verificaImagemBotaoMusica(isPlaying: chompPlayer?.isPlaying ?? true)
     }
-    
     // Funções
     @objc func clicouCaixaTexto() {
         print("Clicou na caixa de texto")
-        //show(secondViewController, sender: nil)
-        //present(secondViewController, animated: true, completion: nil)
-        //navigationController?.pushViewController(segundaViewController, animated: true)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -197,17 +210,19 @@ class PrimeiraViewController : UIViewController, UITextFieldDelegate, UIGestureR
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textFieldSeuNome.resignFirstResponder()
+        nomeUsuario = textFieldSeuNome.text!
         print(nomeUsuario)
+        navigationController?.pushViewController(terceiraViewController, animated: true)
         return true;
     }
     
     @objc func pararIniciarMusica() {
         if chompPlayer?.isPlaying == true {
             chompPlayer?.pause()
-            componentes.alterarBackgroundBotaoMusica(estadoBotao: "iniciar")
+            botaoPararIniciarMusica.setBackgroundImage(UIImage(named: "Iniciar música-2.png"), for: .normal)
         } else {
             chompPlayer?.play()
-            componentes.alterarBackgroundBotaoMusica(estadoBotao: "parar")
+            botaoPararIniciarMusica.setBackgroundImage(UIImage(named: "Parar música-2.png"), for: .normal)
         }
         
     }
@@ -216,6 +231,220 @@ class PrimeiraViewController : UIViewController, UITextFieldDelegate, UIGestureR
         navigationController?.pushViewController(temasViewController, animated: true)
     }
 }
+
+//: ### TerceiraViewController
+
+class TerceiraViewController: UIViewController, UIGestureRecognizerDelegate {
+    
+    let botaoMudarTema = UIButton()
+    let botaoPararIniciarMusica = UIButton()
+    let caixaTextoView = UIImageView()
+    let textoConversa = UILabel(frame: CGRect(x: 476, y: 356, width: 488, height: 189))
+    let backgroundView = UIImageView(frame: CGRect(x: 0, y: 0, width: 1440, height: 900))
+    
+    override func loadView() {
+        let view = UIView()
+        view.backgroundColor = .red
+        
+        self.view = view
+        
+    }
+    
+    override func viewDidLoad() {
+        // Imagem de fundo (tema)
+        backgroundView.image = backgroundImagem
+        
+        // Botão mudar tema
+        botaoMudarTema.frame = CGRect(x: 1263, y: 13, width: 164, height: 35)
+        let imagemBotaoMudarTema = UIImage(named: "Mudar tema-2.png")
+        botaoMudarTema.setBackgroundImage(imagemBotaoMudarTema, for: .normal)
+        botaoMudarTema.addTarget(self, action: #selector(mudarTema), for: .touchUpInside)
+        
+        // Botão parar música
+        botaoPararIniciarMusica.frame = CGRect(x: 1263, y: 56, width: 164, height: 35)
+        let imagemBotaoMusica = UIImage(named: "Parar música-2.png")
+        botaoPararIniciarMusica.setBackgroundImage(imagemBotaoMusica, for: .normal)
+        if chompPlayer?.isPlaying == true {
+            botaoPararIniciarMusica.setBackgroundImage(UIImage(named: "Parar música-2.png"), for: .normal)
+        } else {
+            botaoPararIniciarMusica.setBackgroundImage(UIImage(named: "Iniciar música-2.png"), for: .normal)
+        }
+        botaoPararIniciarMusica.addTarget(self, action: #selector(pararIniciarMusica), for: .touchUpInside)
+        
+        // Caixa de texto, com label
+        let imagemCaixaTexto = UIImage(named: "Caixa de texto-2.png")
+        caixaTextoView.image = imagemCaixaTexto
+        caixaTextoView.frame = CGRect(x: 394, y: 221, width: 651, height: 458)
+        caixaTextoView.isUserInteractionEnabled = true
+        let tocouCaixaTexto = UITapGestureRecognizer(target: self, action: #selector(clicouCaixaTexto))
+        caixaTextoView.addGestureRecognizer(tocouCaixaTexto)
+        
+        // Texto
+        textoConversa.font = dancingScript
+        textoConversa.textAlignment = .left
+        textoConversa.lineBreakMode = .byWordWrapping
+        textoConversa.numberOfLines = 0
+        
+        // Adiciona Subviews
+        view.addSubview(backgroundView)
+        view.addSubview(caixaTextoView)
+        view.addSubview(botaoMudarTema)
+        view.addSubview(botaoPararIniciarMusica)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // Gambiarra para resolver bug do Xcode (perte a referencia do backgroundView)
+        backgroundView.image = backgroundImagem
+        view.addSubview(self.backgroundView)
+        view.sendSubviewToBack(self.backgroundView)
+        
+        textoConversa.text = "Olá, \(nomeUsuario), não sei qual é o motivo da sua ansiedade. Mas vamos controlá-la juntos !"
+        view.addSubview(textoConversa)
+        
+        // Verifica botão iniciar/parar música
+        //self.componentes.verificaImagemBotaoMusica(isPlaying: chompPlayer?.isPlaying ?? true)
+    }
+    // Funções
+    @objc func clicouCaixaTexto() {
+        print("Clicou na caixa de texto")
+        navigationController?.pushViewController(quartaViewController, animated: true)
+    }
+    
+    @objc func pararIniciarMusica() {
+        if chompPlayer?.isPlaying == true {
+            chompPlayer?.pause()
+            botaoPararIniciarMusica.setBackgroundImage(UIImage(named: "Iniciar música-2.png"), for: .normal)
+        } else {
+            chompPlayer?.play()
+            botaoPararIniciarMusica.setBackgroundImage(UIImage(named: "Parar música-2.png"), for: .normal)
+        }
+        
+    }
+    
+    @objc func mudarTema() {
+        navigationController?.pushViewController(temasViewController, animated: true)
+    }
+}
+
+//: ### QuartaViewController
+
+class QuartaViewController: UIViewController, UIGestureRecognizerDelegate {
+    
+    let botaoMudarTema = UIButton()
+    let botaoPararIniciarMusica = UIButton()
+    let caixaTextoView = UIImageView()
+    let texto = UILabel(frame: CGRect(x: 545, y: 308, width: 350, height: 98))
+    let backgroundView = UIImageView(frame: CGRect(x: 0, y: 0, width: 1440, height: 900))
+    let botaoControleRespiracao = UIButton(frame: CGRect(x: 564, y: 450, width: 325, height: 39))
+    let botaoMeditar = UIButton(frame: CGRect(x: 570, y: 515, width: 325, height: 40))
+    let botaoMindfulness = UIButton(frame: CGRect(x: 570, y: 581, width: 325, height: 39))
+    
+    override func loadView() {
+        let view = UIView()
+        view.backgroundColor = .red
+        
+        self.view = view
+        
+    }
+    
+    override func viewDidLoad() {
+        // Imagem de fundo (tema)
+        backgroundView.image = backgroundImagem
+        
+        // Botão mudar tema
+        botaoMudarTema.frame = CGRect(x: 1263, y: 13, width: 164, height: 35)
+        let imagemBotaoMudarTema = UIImage(named: "Mudar tema-2.png")
+        botaoMudarTema.setBackgroundImage(imagemBotaoMudarTema, for: .normal)
+        botaoMudarTema.addTarget(self, action: #selector(mudarTema), for: .touchUpInside)
+        
+        // Botão parar música
+        botaoPararIniciarMusica.frame = CGRect(x: 1263, y: 56, width: 164, height: 35)
+        let imagemBotaoMusica = UIImage(named: "Parar música-2.png")
+        botaoPararIniciarMusica.setBackgroundImage(imagemBotaoMusica, for: .normal)
+        if chompPlayer?.isPlaying == true {
+            botaoPararIniciarMusica.setBackgroundImage(UIImage(named: "Parar música-2.png"), for: .normal)
+        } else {
+            botaoPararIniciarMusica.setBackgroundImage(UIImage(named: "Iniciar música-2.png"), for: .normal)
+        }
+        botaoPararIniciarMusica.addTarget(self, action: #selector(pararIniciarMusica), for: .touchUpInside)
+        
+        // Caixa de texto, com label
+        let imagemCaixaTexto = UIImage(named: "Caixa de texto-2.png")
+        caixaTextoView.image = imagemCaixaTexto
+        caixaTextoView.frame = CGRect(x: 394, y: 221, width: 651, height: 458)
+        
+        // Texto
+        texto.font = dancingScript
+        texto.textAlignment = .center
+        texto.lineBreakMode = .byWordWrapping
+        texto.numberOfLines = 0
+        texto.text = "O que você gostaria de fazer ?"
+        
+        // Botão controlar a respiração
+        botaoControleRespiracao.setBackgroundImage(UIImage(named: "Botao controlar a respiracao.png"), for: .normal)
+        botaoControleRespiracao.tag = 1
+        botaoControleRespiracao.addTarget(self, action: #selector(QuartaViewController.escolherAtividade(sender:)), for: .touchUpInside)
+        
+        // Botão meditar
+        botaoMeditar.setBackgroundImage(UIImage(named: "Botao meditar.png"), for: .normal)
+        botaoMeditar.tag = 2
+        botaoMeditar.addTarget(self, action: #selector(QuartaViewController.escolherAtividade(sender:)), for: .touchUpInside)
+        
+        // Botão mindfulness
+        botaoMindfulness.setBackgroundImage(UIImage(named: "Botao mindfulness.png"), for: .normal)
+        botaoMindfulness.tag = 3
+        botaoMindfulness.addTarget(self, action: #selector(QuartaViewController.escolherAtividade(sender:)), for: .touchUpInside)
+        
+        // Adiciona Subviews
+        view.addSubview(backgroundView)
+        view.addSubview(caixaTextoView)
+        view.addSubview(texto)
+        view.addSubview(botaoMudarTema)
+        view.addSubview(botaoPararIniciarMusica)
+        view.addSubview(botaoControleRespiracao)
+        view.addSubview(botaoMeditar)
+        view.addSubview(botaoMindfulness)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // Gambiarra para resolver bug do Xcode (perte a referencia do backgroundView)
+        backgroundView.image = backgroundImagem
+        view.addSubview(self.backgroundView)
+        view.sendSubviewToBack(self.backgroundView)
+        
+        // Verifica botão iniciar/parar música
+        //self.componentes.verificaImagemBotaoMusica(isPlaying: chompPlayer?.isPlaying ?? true)
+    }
+    
+    // Funções
+    @objc func pararIniciarMusica() {
+        if chompPlayer?.isPlaying == true {
+            chompPlayer?.pause()
+            botaoPararIniciarMusica.setBackgroundImage(UIImage(named: "Iniciar música-2.png"), for: .normal)
+        } else {
+            chompPlayer?.play()
+            botaoPararIniciarMusica.setBackgroundImage(UIImage(named: "Parar música-2.png"), for: .normal)
+        }
+        
+    }
+    
+    @objc func mudarTema() {
+        navigationController?.pushViewController(temasViewController, animated: true)
+    }
+    
+    @objc func escolherAtividade(sender: UIButton) {
+        let sender = sender.tag
+        
+        if sender == 1 {
+            print("Escolheu controlar a respiração")
+        } else if sender == 2 {
+            print("Escolheu meditar")
+        } else {
+            print("Escolheu mindfulness")
+        }
+    }
+}
+//: ### TemasViewController
 
 class TemasViewController: UIViewController {
     
@@ -291,9 +520,9 @@ class TemasViewController: UIViewController {
         self.view = view
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        backgroundView.image = backgroundImagem
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        //componentes.verificaImagemBotaoMusica(isPlaying: chompPlayer?.isPlaying ?? true)
+    }
     
     // Funções
     @objc func pararIniciarMusica() {
@@ -345,15 +574,21 @@ class TemasViewController: UIViewController {
         
         if temaAtual == 1 || temaAtual == 2 || temaAtual == 3 {
             if temaAnterior == 4 || temaAnterior == 5 || temaAnterior == 6 {
+                let estadoAnteriorChompPlayer = chompPlayer?.isPlaying
                 chompPlayer = player.createPlayer(from: "som tema floresta")
                 chompPlayer?.numberOfLoops = 10
-                chompPlayer?.play()
+                if estadoAnteriorChompPlayer == true {
+                    chompPlayer?.play()
+                }
             }
         } else {
             if temaAnterior == 1 || temaAnterior == 2 || temaAnterior == 3 {
+                let estadoAnteriorChompPlayer = chompPlayer?.isPlaying
                 chompPlayer = player.createPlayer(from: "som tema agua")
                 chompPlayer?.numberOfLoops = 10
-                chompPlayer?.play()
+                if estadoAnteriorChompPlayer == true {
+                    chompPlayer?.play()
+                }
             }
         }
         
@@ -367,23 +602,28 @@ class TesteWebView: UIViewController, WKUIDelegate {
         let view = UIView()
         view.backgroundColor = .systemTeal
         
-        let url = URL(string: "https://www.youtube.com/watch?v=mTJ56qy2Flg")!
+        self.view = view
+    }
+    
+    override func viewDidLoad() {
+        //let urlVideo1 = URL(string: "https://www.youtube.com/embed/mTJ56qy2Flg")!
+        //let urlVideo2 = URL(string: "https://www.youtube.com/embed/mzAqzL2XIQA")!
+        let urlVideo3 = URL(string: "https://www.youtube.com/embed/xpYMV0Uqc-M")!
         
-        let request = URLRequest(url: url)
+        
+        let request = URLRequest(url: urlVideo3)
         
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.ignoresViewportScaleLimits = true
         
-        let webView = WKWebView(frame: CGRect(x: 227, y: 174, width: 985, height: 552), configuration: webConfiguration)
-        //webView.configuration = webConfiguration
-        webView.load(request)
+        let webView = WKWebView(frame: CGRect(x: 227, y: 174, width: 983, height: 552), configuration: webConfiguration)
         webView.uiDelegate = self
+        webView.load(request)
         
         view.addSubview(webView)
-        
-        self.view = view
     }
 }
+
 extension UIColor {
     class func transparente() -> UIColor {
         return UIColor(white: 1.0, alpha: 0)
@@ -391,16 +631,15 @@ extension UIColor {
 }
 
 // Present the view controller in the Live View window
-let telaInicial = TelaInicialViewController(screenType: .mac, isPortrait: true)
 let primeiraViewController = PrimeiraViewController(screenType: .mac, isPortrait: true)
+let segundaViewController = SegundaViewController(screenType: .mac, isPortrait: true)
+let terceiraViewController = TerceiraViewController(screenType: .mac, isPortrait: true)
+let quartaViewController = QuartaViewController(screenType: .mac, isPortrait: true)
 let temasViewController = TemasViewController(screenType: .mac, isPortrait: true)
 let testeWebView = TesteWebView(screenType: .mac, isPortrait: true)
 
 let navigation = UINavigationController(screenType: .mac, isPortrait: true)
 navigation.navigationBar.isHidden = true
-navigation.pushViewController(telaInicial, animated: true)
+navigation.pushViewController(quartaViewController, animated: true)
 
 PlaygroundPage.current.liveView = navigation.scale(to: 0.5)
-
-//: # Navegação
-
