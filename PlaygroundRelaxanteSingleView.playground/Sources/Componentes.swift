@@ -5,8 +5,6 @@ public class Componentes {
     public let botaoMudarTema = UIButton()
     public let botaoPararIniciarMusica = UIButton()
     public let caixaTextoView = UIImageView()
-    var backgroundImagem = UIImage()
-    public let backgroundView = UIImageView()
     
     public init() {
         // Botão mudar tema
@@ -23,11 +21,6 @@ public class Componentes {
         let imagemCaixaTexto = UIImage(named: "Caixa de texto-2.png")
         caixaTextoView.image = imagemCaixaTexto
         caixaTextoView.frame = CGRect(x: 394, y: 221, width: 651, height: 458)
-        
-        // Imagem background
-        backgroundImagem = UIImage(named: "tema01.png")!
-        backgroundView.image = backgroundImagem
-        backgroundView.frame = CGRect(x: 0, y: 0, width: 1440, height: 900)
     }
     
     public func alterarBackgroundBotaoMusica (estadoBotao: String) {
@@ -40,20 +33,11 @@ public class Componentes {
         }
     }
     
-    public func mudarImagemBackground (numeroTema: Int) {
-        if numeroTema == 1 {
-            self.backgroundImagem = UIImage(named: "")!
-            self.backgroundView.image = backgroundImagem
-        } else if numeroTema == 2 {
-            
-        } else if numeroTema == 3 {
-            
-        } else if numeroTema == 4 {
-            
-        } else if numeroTema == 5 {
-            
+    public func verificaImagemBotaoMusica (isPlaying: Bool) {
+        if isPlaying == true {
+            alterarBackgroundBotaoMusica(estadoBotao: "parar")
         } else {
-            
+            alterarBackgroundBotaoMusica(estadoBotao: "iniciar")
         }
     }
 }
