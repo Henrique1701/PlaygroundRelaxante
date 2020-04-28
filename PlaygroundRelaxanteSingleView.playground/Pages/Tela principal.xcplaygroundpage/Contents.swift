@@ -15,7 +15,6 @@ chompPlayer = player.createPlayer(from: "som tema floresta")
 chompPlayer?.numberOfLoops = 10
 //chompPlayer?.play()
 
-
 // Controle música tema
 var temaAtual = 1
 //: ## Fontes
@@ -29,13 +28,11 @@ let dancingScript30 = UIFont(name: "Dancing Script", size: 30)
 var nomeUsuario = ""
 
 //: ## Variáveis de controle
-
 var controleVideo = 0
 // Controlar reprodução da música de fundo
 var estadoMusica = chompPlayer?.isPlaying
 
 //: ### PrimeiraViewController
-
 class PrimeiraViewController : UIViewController, UIGestureRecognizerDelegate {
     
     let componentes = Componentes()
@@ -101,7 +98,7 @@ class PrimeiraViewController : UIViewController, UIGestureRecognizerDelegate {
     // Funções
     @objc func clicouCaixaTexto() {
         print("Clicou na caixa de texto")
-        navigationController?.pushViewController(segundaViewController, animated: true)
+        navigationController?.pushViewController(SegundaViewController(), animated: true)
     }
     
     @objc func pararIniciarMusica() {
@@ -123,7 +120,6 @@ class PrimeiraViewController : UIViewController, UIGestureRecognizerDelegate {
 }
 
 //: ### SegundaViewController
-
 class SegundaViewController : UIViewController, UITextFieldDelegate, UIGestureRecognizerDelegate {
     
     let botaoMudarTema = UIButton()
@@ -216,7 +212,7 @@ class SegundaViewController : UIViewController, UITextFieldDelegate, UIGestureRe
         textFieldSeuNome.resignFirstResponder()
         nomeUsuario = textFieldSeuNome.text!
         print(nomeUsuario)
-        navigationController?.pushViewController(terceiraViewController, animated: true)
+        navigationController?.pushViewController(TerceiraViewController(), animated: true)
         return true;
     }
     
@@ -237,7 +233,6 @@ class SegundaViewController : UIViewController, UITextFieldDelegate, UIGestureRe
 }
 
 //: ### TerceiraViewController
-
 class TerceiraViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let botaoMudarTema = UIButton()
@@ -311,7 +306,7 @@ class TerceiraViewController: UIViewController, UIGestureRecognizerDelegate {
     // Funções
     @objc func clicouCaixaTexto() {
         print("Clicou na caixa de texto")
-        navigationController?.pushViewController(quartaViewController, animated: true)
+        navigationController?.pushViewController(QuartaViewController(), animated: true)
     }
     
     @objc func pararIniciarMusica() {
@@ -331,7 +326,6 @@ class TerceiraViewController: UIViewController, UIGestureRecognizerDelegate {
 }
 
 //: ### QuartaViewController
-
 class QuartaViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let botaoMudarTema = UIButton()
@@ -450,12 +444,11 @@ class QuartaViewController: UIViewController, UIGestureRecognizerDelegate {
             print("Escolheu mindfulness")
             controleVideo = 3
         }
-        navigationController?.pushViewController(quintaViewController, animated: true)
+        navigationController?.pushViewController(QuintaViewController(), animated: true)
     }
 }
 
 //: ### QuintaViewController
-
 class QuintaViewController: UIViewController, UIGestureRecognizerDelegate, WKUIDelegate {
     
     let backgroundView = UIImageView(frame: CGRect(x: 0, y: 0, width: 1440, height: 900))
@@ -463,7 +456,7 @@ class QuintaViewController: UIViewController, UIGestureRecognizerDelegate, WKUID
     let urlVideo1 = URL(string: "https://www.youtube.com/embed/cizpXqVzBjw")!
     let urlVideo2 = URL(string: "https://www.youtube.com/embed/hn3J-d44r94")!
     let urlVideo3 = URL(string: "https://www.youtube.com/embed/xpYMV0Uqc-M")!
-    //var webView = WKWebView()
+    let webView = WKWebView(frame: CGRect(x: 227, y: 174, width: 982, height: 552), configuration: WKWebViewConfiguration())
     
     override func loadView() {
         let view = UIView()
@@ -501,11 +494,6 @@ class QuintaViewController: UIViewController, UIGestureRecognizerDelegate, WKUID
             request = URLRequest(url: urlVideo3)
         }
         
-        let webConfiguration = WKWebViewConfiguration()
-        webConfiguration.ignoresViewportScaleLimits = true
-        
-        let webView = WKWebView(frame: CGRect(x: 227, y: 174, width: 983, height: 552), configuration: webConfiguration)
-        webView.uiDelegate = self
         webView.load(request)
         
         view.addSubview(webView)
@@ -524,7 +512,6 @@ class QuintaViewController: UIViewController, UIGestureRecognizerDelegate, WKUID
 
 
 //: ### TemasViewController
-
 class TemasViewController: UIViewController {
     
     let componentes = Componentes()
@@ -683,7 +670,6 @@ extension UIColor {
 }
 
 //: ## Navegação
-
 // Present the view controller in the Live View window
 let primeiraViewController = PrimeiraViewController(screenType: .mac, isPortrait: true)
 let segundaViewController = SegundaViewController(screenType: .mac, isPortrait: true)
